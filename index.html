@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<title>شهر تالس</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  font-family: Tahoma;
+  background: linear-gradient(#142b4f,#1f4f7a);
+}
+
+/* صفحه */
+.sky{
+  width:100vw;
+  height:100vh;
+  position:relative;
+  overflow:hidden;
+}
+
+/* ===== ابرها (بالای صفحه – قابل نمایش روی موبایل) ===== */
+.cloud{
+  position:absolute;
+  background:white;
+  width:140px;
+  height:65px;
+  border-radius:50px;
+  top:20px;
+  opacity:0.9;
+  z-index:5;
+}
+
+.cloud::before,
+.cloud::after{
+  content:"";
+  position:absolute;
+  background:white;
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  top:-30px;
+}
+
+.cloud::before{ left:15px; }
+.cloud::after{ right:15px; }
+
+.cloud1{
+  left:-200px;
+  animation: cloudMove 35s linear infinite;
+}
+
+.cloud2{
+  top:70px;
+  left:-350px;
+  animation: cloudMove 50s linear infinite;
+}
+
+.cloud3{
+  top:40px;
+  left:-500px;
+  animation: cloudMove 65s linear infinite;
+}
+
+@keyframes cloudMove{
+  from{ left:-500px; }
+  to{ left:110%; }
+}
+
+/* ===== متن ===== */
+.text-box{
+  margin-top:280px;
+  text-align:center;
+  padding:0 20px;
+}
+
+.title{
+  font-size:42px;
+  font-weight:bold;
+  color:#f5e6c8;
+}
+
+.subtitle{
+  font-size:18px;
+  color:#f3e0b5;
+  margin-top:20px;
+  line-height:1.9;
+}
+
+/* ===== دکمه ===== */
+.menu{
+  margin-top:40px;
+}
+
+.start-btn{
+  font-size:22px;
+  padding:14px 45px;
+  border:none;
+  border-radius:40px;
+  background:#2ecc71;
+  color:white;
+  cursor:pointer;
+  animation: pulse 1.6s infinite;
+}
+
+@keyframes pulse{
+  0%{ transform:scale(1); }
+  70%{ transform:scale(1.08); box-shadow:0 0 25px rgba(46,204,113,0.9); }
+  100%{ transform:scale(1); }
+}
+
+/* ===== شهر پایین ===== */
+.city{
+  position:absolute;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:40vh; /* ارتفاع شهر */
+  overflow:hidden;
+}
+
+.city img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="sky">
+
+  <!-- ابرها -->
+  <div class="cloud cloud1"></div>
+  <div class="cloud cloud2"></div>
+  <div class="cloud cloud3"></div>
+
+  <!-- متن -->
+  <div class="text-box">
+    <div class="title">به شهر تالس خوش اومدید!</div>
+    <div class="subtitle">
+      اگه آماده‌ای تا یه آموزش جذاب و هیجان‌انگیز رو شروع کنیم  
+      روی دکمه زیر بزن😊
+    </div>
+
+    <div class="menu">
+      <a href="lesson.html">
+  <button class="start-btn">بزن بریم</button>
+</a>
+    </div>
+  </div>
+<div class="fog"></div>
+  
+
+</body>
+</html>

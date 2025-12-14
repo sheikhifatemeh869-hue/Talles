@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<title>آموزش تالس - مرحله 2</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  font-family: Tahoma, sans-serif;
+  background: #142b4f;
+  color:#f5e6c8;
+  overflow:hidden;
+  text-align:center;
+}
+
+.header{
+  text-align:center;
+  padding:20px;
+  font-size:28px;
+  font-weight:bold;
+}
+
+.card{
+  background: rgba(255,255,255,0.1);
+  margin:20px;
+  padding:20px;
+  border-radius:20px;
+  position:relative;
+}
+
+canvas{
+  background:#142b4f;
+  display:block;
+  margin:20px auto;
+  border:1px solid #f5e6c8;
+  touch-action: none; /* جلوگیری از اسکرول هنگام لمس */
+}
+
+#correctMessage{
+  display:none;
+  font-size:32px;
+  color:#2ecc71;
+  font-weight:bold;
+  margin-top:30px;
+}
+
+.firework{
+  position:absolute;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  animation: explode 1s linear forwards;
+}
+
+@keyframes explode{
+  0% {transform: scale(1) translate(0,0); opacity:1;}
+  100% {transform: scale(2) translate(var(--x), var(--y)); opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">🎯 مأموریت دوم تالس</div>
+
+<div class="card">
+  <p>یک خط موازی با ضلع پایین مثلث رسم کن تا نسبت‌ها درست شوند 👀</p>
+  <canvas id="canvas" width="350" height="250"></canvas>
+  <div id="correctMessage">✅ جواب درست است!</div>
+</div>
+
+<audio id="clapSound">
+  <source src="https://www.soundjay.com/human/applause-01.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+let drawing=false;
+let userLine = null;
+
+// مثلث کوچک‌تر
+const triangle = [
+  {x:50, y:200},
+  {x:300, y:200},
+  {x:175, y:70}
+];
+
+// رسم مثلث
+function drawTriangle(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.strokeStyle="#f5e6c8";
+  ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.moveTo(triangle[0].x, triangle[0].y);
+  ctx.lineTo(triangle[1].x, triangle[1].y);
+  ctx.lineTo(triangle[2].x, triangle[2].y);
+  ctx.closePath();
+  ctx.stroke();
+
+  // خط کاربر
+  if(userLine){
+    ctx.strokeStyle="#2ecc71";
+    ctx.lineWidth=3;
+    ctx.beginPath();
+    ctx.moveTo(userLine.start.x, userLine.start.y);
+    ctx.lineTo(userLine.end.x, userLine.end.y);
+    ctx.stroke();
+  }
+}
+
+// بررسی موازی بودن
+function isParallel(line){
+  const slopeBase = (triangle[1].y - triangle[0].y)/(triangle[1].x - triangle[0].x);
+  const slopeLine = (line.end.y - line.start.y)/(line.end.x - line.start.x);
+  return Math.abs(slopeBase - slopeLine) < 0.05;
+}
+
+// رویداد موس
+function getPos(e){
+  const rect = canvas.getBoundingClientRect();
+  let x,y;
+  if(e.touches){
+    x = e.touches[0].clientX - rect.left;
+    y = e.touches[0].clientY - rect.top;
+  } else {
+    x = e.clientX - rect.left;
+    y = e.clientY - rect.top;
+  }
+  return {x, y};
+}
+
+canvas.addEventListener('mousedown', (e)=>{
+  drawing=true;
+  const pos = getPos(e);
+  userLine = {start: pos, end: pos};
+});
+
+canvas.addEventListener('mousemove', (e)=>{
+  if(!drawing) return;
+  const pos = getPos(e);
+  userLine.end = pos;
+  drawTriangle();
+});
+
+canvas.addEventListener('mouseup', ()=>{
+  drawing=false;
+  if(userLine && isParallel(userLine)){
+    correctAnswer();
+  } else {
+    alert("😅 هنوز درست نیست، دوباره تلاش کن!");
+  }
+});
+
+// لمس (touch)
+canvas.addEventListener('touchstart', (e)=>{
+  drawing=true;
+  const pos = getPos(e);
+  userLine = {start: pos, end: pos};
+  e.preventDefault();
+});
+
+canvas.addEventListener('touchmove', (e)=>{
+  if(!drawing) return;
+  const pos = getPos(e);
+  userLine.end = pos;
+  drawTriangle();
+  e.preventDefault();
+});
+
+canvas.addEventListener('touchend', ()=>{
+  drawing=false;
+  if(userLine && isParallel(userLine)){
+    correctAnswer();
+  } else {
+    alert("😅 هنوز درست نیست، دوباره تلاش کن!");
+  }
+});
+
+function correctAnswer(){
+  document.getElementById('clapSound').play();
+  document.getElementById('correctMessage').style.display='block';
+  createFireworks();
+
+  setTimeout(()=> {
+    window.location.href = "stage3.html";
+  },3000);
+}
+
+// فشفشه
+function createFireworks(){
+  for(let i=0;i<30;i++){
+    const fw = document.createElement('div');
+    fw.className='firework';
+    fw.style.setProperty('--x', `${(Math.random()-0.5)*300}px`);
+    fw.style.setProperty('--y', `${(Math.random()-0.5)*300}px`);
+    fw.style.background = `hsl(${Math.random()*360},100%,50%)`;
+    fw.style.left = `${window.innerWidth/2}px`;
+    fw.style.top = `${window.innerHeight/2}px`;
+    document.body.appendChild(fw);
+    setTimeout(()=>fw.remove(),1000);
+  }
+}
+
+drawTriangle();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<title>آموزش تالس - مرحله 1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  font-family: Tahoma, sans-serif;
+  background: #142b4f;
+  color:#f5e6c8;
+  overflow-x:hidden;
+  text-align:center;
+}
+
+.header{
+  text-align:center;
+  padding:25px;
+  font-size:28px;
+  font-weight:bold;
+}
+
+.card{
+  background: rgba(255,255,255,0.1);
+  margin:20px;
+  padding:20px;
+  border-radius:20px;
+}
+
+.shape{
+  margin:20px auto;
+  width:260px;
+  height:200px;
+  position:relative;
+}
+
+.line{
+  position:absolute;
+  height:3px;
+  background:#ffcc00;
+}
+
+.l1{ top:30px; left:20px; width:220px; }
+.l2{ top:100px; left:40px; width:180px; }
+.l3{ top:170px; left:60px; width:140px; }
+
+.cut{
+  position:absolute;
+  width:3px;
+  height:200px;
+  background:#2ecc71;
+  left:130px;
+  top:0;
+}
+
+.btn{
+  display:block;
+  margin:20px auto;
+  padding:14px 40px;
+  border:none;
+  border-radius:35px;
+  background:#2ecc71;
+  color:white;
+  font-size:20px;
+  cursor:pointer;
+  animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+  0%{ transform:scale(1; }
+  70%{ transform:scale(1.05; }
+  100%{ transform:scale(1; }
+}
+
+.question{
+  text-align:center;
+  font-size:18px;
+  margin-top:10px;
+}
+
+input{
+  padding:10px;
+  font-size:16px;
+  border-radius:8px;
+  border:none;
+  margin-top:15px;
+  width:200px;
+}
+
+#correctMessage{
+  display:none;
+  font-size:32px;
+  color:#2ecc71;
+  font-weight:bold;
+  margin-top:30px;
+}
+
+.firework{
+  position:absolute;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  animation: explode 1s linear forwards;
+}
+
+@keyframes explode{
+  0% {transform: scale(1) translate(0,0); opacity:1;}
+  100% {transform: scale(2) translate(var(--x), var(--y)); opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">🎯 مأموریت اول تالس</div>
+
+<div class="card">
+  <p>
+    فرض کن چند خط <b>موازی</b> داریم که توسط یک خط دیگه قطع شدن.
+    تالس میگه نسبت قسمت‌ها با هم برابره 👀
+  </p>
+
+  <div class="shape">
+    <div class="line l1"></div>
+    <div class="line l2"></div>
+    <div class="line l3"></div>
+    <div class="cut"></div>
+  </div>
+
+  <div class="question">
+    به نظرت نسبت قسمت بالا به وسط با نسبت وسط به پایین برابر است؟
+  </div>
+
+  <input type="text" id="answer" placeholder="جواب خود را بنویسید">
+  <div id="correctMessage">✅ جواب درست است!</div>
+</div>
+
+<button class="btn" onclick="checkAnswer()">بررسی جواب</button>
+
+<audio id="clapSound">
+  <source src="https://www.soundjay.com/human/applause-01.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+function checkAnswer(){
+  const userAnswer = document.getElementById('answer').value.trim().toLowerCase();
+  if(userAnswer === "بله" || userAnswer === "درسته" || userAnswer === "صحیح"){
+    document.getElementById('clapSound').play();
+    showCorrectMessage();
+    createFireworks();
+
+    // بعد از 3 ثانیه به مرحله بعد برو
+    setTimeout(()=> {
+      window.location.href = "stage2.html"; // اینجا لینک مرحله بعد بذار
+    }, 3000);
+  } else {
+    alert("😅 هنوز درست نیست. دوباره فکر کن!");
+  }
+}
+
+function showCorrectMessage(){
+  const msg = document.getElementById('correctMessage');
+  msg.style.display='block';
+}
+
+// فشفشه
+function createFireworks(){
+  for(let i=0;i<30;i++){
+    const fw = document.createElement('div');
+    fw.className='firework';
+    fw.style.setProperty('--x', `${(Math.random()-0.5)*300}px`);
+    fw.style.setProperty('--y', `${(Math.random()-0.5)*300}px`);
+    fw.style.background = `hsl(${Math.random()*360},100%,50%)`;
+    fw.style.left = `${window.innerWidth/2}px`;
+    fw.style.top = `${window.innerHeight/2}px`;
+    document.body.appendChild(fw);
+    setTimeout(()=>fw.remove(),1000);
+  }
+}
+</script>
+
+</body>
+</html>
